@@ -27,20 +27,34 @@ def calc_returns(data_df):
 
 def calc_momentum(data_df):
     nrows = data_df.count()
-
-    print('\r\n\r\n==========begin calc_momentum=============')
-    #print(data_df.iloc[[0]])
-    #print(data_df.iloc[1:2].index[0])
-
-    print('\r\n****************************')
-    print(data_df.diff().tail(1).iloc[0]+data_df.iloc[0:-1].diff().tail(1).iloc[0]+data_df.iloc[0:-2].diff().tail(1).iloc[0])
-    #print(data_df.iloc[0:-1].diff().tail(1))
-    #print(data_df.iloc[0:-2].diff().tail(1))
     
-    #print(data_df.iloc[0])
-    #print(data_df.iloc[1])
-    #s = slope(data_df.iloc[0:1].index[0],data_df.iloc[0:1],data_df.iloc[1:2].index[0], data_df.iloc[1:2] )
-    #print (s)
+    print('\r\n\r\n==========begin calc_momentum=============')
+    df_diff = (data_df-data_df.shift(1)).tail(17)
+    r4  = pd.DataFrame(data=df_diff.iloc[1:4].sum())
+    r5  = pd.DataFrame(data=df_diff.iloc[2:5].sum())
+    r6  = pd.DataFrame(data=df_diff.iloc[3:6].sum())
+    r7  = pd.DataFrame(data=df_diff.iloc[4:7].sum())
+    r8  = pd.DataFrame(data=df_diff.iloc[5:8].sum())
+    r9  = pd.DataFrame(data=df_diff.iloc[6:9].sum())
+    r10 = pd.DataFrame(data=df_diff.iloc[7:10].sum())
+    r11 = pd.DataFrame(data=df_diff.iloc[8:11].sum())
+    r12 = pd.DataFrame(data=df_diff.iloc[9:12].sum())
+    r13 = pd.DataFrame(data=df_diff.iloc[10:13].sum())
+    r14 = pd.DataFrame(data=df_diff.iloc[11:14].sum())
+    r15 = pd.DataFrame(data=df_diff.iloc[12:15].sum())
+    r16 = pd.DataFrame(data=df_diff.iloc[13:16].sum())
+    r17 = pd.DataFrame(data=df_diff.iloc[14:17].sum())
+    
+
+    frames = [r4,r5,r6,r7,r8,r9,r10,r11,r12,r13,r14,r15,r16,r17]
+    all_frames = pd.concat(frames, axis=1, ignore_index=True).transpose()
+
+    result = pd.DataFrame()
+    asum = all_frames.iloc[7:14].sum()
+    prev_sum = all_frames.iloc[0:7].sum()
+    result['sum'] = asum
+    result['prev_sum'] = prev_sum
+    print(result)
     print('\r\n\r\n==========end calc_momentum=============')
 
 if __name__ == '__main__':
