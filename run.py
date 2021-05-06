@@ -3,17 +3,18 @@ import pandas as pd
 import datetime as dt
 import utils
 
-def find_first_trading_year_of_day(df: pd.DataFrame):
+def find_first_trading_year_of_day(yr: int, df: pd.DataFrame):
     i=0
     for idx in df.index:
-        if pd.to_datetime(idx).year == 2021:
+        if pd.to_datetime(idx).year == yr:
             break
         i += 1
     return i
 
 def calc_returns(data_df):
     nrows = data_df.shape[0]
-    i = find_first_trading_year_of_day(data_df)-1
+    yr = data_df.index[nrows-1].year
+    i = find_first_trading_year_of_day(yr, data_df)-1
     r7 = ((data_df - data_df.shift(7))/data_df.shift(7)).tail(1)
     r20 = ((data_df - data_df.shift(20))/data_df.shift(20)).tail(1)
     r65 = ((data_df - data_df.shift(65))/data_df.shift(65)).tail(1)
