@@ -22,13 +22,27 @@ def calc_returns(data_df):
     r365 = ((data_df - data_df.shift(nrows-1))/data_df.shift(nrows-1)).tail(1)
     rytd = ((data_df - data_df.shift(nrows-i-1))/data_df.shift(nrows-i-1)).tail(1)
 
+    wts_idx = pd.Series(['7','20','65','120','365','ytd'], name='wts')
+    returns_df = pd.concat([r7,r20,r65,r120,r365,rytd], axis=0, keys=wts_idx, ignore_index=True)
+    #returns_df = pd.concat([r7,r20,r65,r120,r365,rytd], axis=0)
 
-    returns_df = pd.concat([r7,r20,r65,r120,r365,rytd], axis=0, keys=['7','20','65','120','365','ytd'])
+    #print(returns_df)
+    # print(returns_df.loc['7']['ARKG'][0])
 
-    print(returns_df)
-    print(returns_df.loc['7']['ARKG'][0])
     return returns_df
     
+def calc_wtd_return(data_df):
+    
+    s0 = data_df.iloc[0] * utils.Constants.returns_weights.loc['7']
+    s1 = data_df.iloc[1] * utils.Constants.returns_weights.loc['20']
+    s2 = data_df.iloc[2] * utils.Constants.returns_weights.loc['65']
+    s3 = data_df.iloc[3] * utils.Constants.returns_weights.loc['120']
+    s5 = data_df.iloc[5] * utils.Constants.returns_weights.loc['ytd']
+    result = pd.concat([s0,s1,s2,s3,s5], axis=1)
+    #print(result)
+    #print(result.sum(axis=1))
+    return(result)
+
 
 def calc_momentum(data_df):
     print('\r\n\r\n==========begin calc_momentum=============')
@@ -57,7 +71,7 @@ def calc_momentum(data_df):
     prev_sum = all_frames.iloc[0:7].sum()
     result['sum'] = asum
     result['prev_sum'] = prev_sum
-    print(result)
+    #print(result)
     #utils.print_df(result)
     return result
    
@@ -72,7 +86,13 @@ if __name__ == '__main__':
     #print(data_df) # get 11 cols of first row
     #print(data_df.iloc[252,1:11]) # get 11 cols of last row
     #print((data_df / data_df.iloc[252,1:11])) # calc return for each col
+    momentum = calc_momentum(data_df)
     returns = calc_returns(data_df)
+    print(momentum)
+    print(returns)
+    wtd_returns = calc_wtd_return(returns)
+    print(wtd_returns)
+    print(wtd_returns.sum(axis=1))
     # print(returns)
     # result = returns.mul(utils.Constants.returns_weights, axis=0)
     # utils.print_df(result)
