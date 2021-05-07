@@ -77,6 +77,12 @@ def calc_momentum(data_df):
    
     print('\r\n\r\n==========end calc_momentum=============')
 
+def calc_allocations(wtd_returns):
+    tot = wtd_returns.loc['SPY'].sum() + wtd_returns.loc['QQQ'].sum() + wtd_returns.loc['IJH'].sum()+ wtd_returns.loc['IJR'].sum() + wtd_returns.loc['VUG'].sum() + wtd_returns.loc['VTV'].sum()
+    print(tot)
+    print("Allocation for SPY {:2.2f}%".format(wtd_returns.loc['SPY'].sum() / tot * 100))
+    print("Allocation for QQQ {:2.2f}%".format(wtd_returns.loc['QQQ'].sum() / tot * 100))
+
 if __name__ == '__main__':
     d_parser = lambda x: pd.to_datetime(x)
     data_df = pd.read_csv('data.csv', parse_dates=['Date'], date_parser=d_parser, index_col='Date')
@@ -93,6 +99,9 @@ if __name__ == '__main__':
     wtd_returns = calc_wtd_return(returns)
     print(wtd_returns)
     print(wtd_returns.sum(axis=1))
+
+    calc_allocations(wtd_returns)
     # print(returns)
     # result = returns.mul(utils.Constants.returns_weights, axis=0)
     # utils.print_df(result)
+    print('done')
